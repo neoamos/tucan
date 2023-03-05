@@ -1,0 +1,156 @@
+
+
+.profile{
+  &-banner{
+    // height: 200px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: rgb(207, 217, 222);
+    & img{
+      position: absolute;
+      top: 0;
+      width: 100%;
+      min-height: 100%;
+      object-fit: fill;
+    }
+  }
+
+  &-avatar{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  &-buttons{
+    display: flex;
+    align-items: flex-start;
+  }
+
+  &-sig{
+    padding: 0 12px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    word-break: break-word;
+    & h2{
+      margin: 0px;
+      font-weight: 800;
+      font-size: 2rem;
+    }
+  }
+  &-description{
+    padding: 0 12px 12px 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  &-info{
+    padding: 0 12px 12px 12px;
+    display: flex;
+    align-items: center;
+    & i{
+      font-size: 1.8rem;
+      margin-right: 5px;
+    }
+  }
+  &-followers{
+    padding: 0 12px 12px 12px;
+    font-size: 1.4rem;
+
+    & .number{
+      font-weight: 700;
+      margin-right: 5px;
+    }
+
+    & .tag{
+      color: rgb(83, 100, 113);
+    }
+
+    & a{
+      color: #000;
+      margin-right: 20px;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &-at{
+    color:rgb(83, 100, 113);
+  }
+
+  &-info{
+    color:rgb(83, 100, 113);
+  }
+}
+
+.spacer{
+  width: 100%;
+  height: 0px;
+  &.square{
+    padding-bottom: 100%;
+  }
+  &.banner{
+    padding-bottom: 33.3333%;
+  }
+}
+
+.pfp-inner{
+  background-color: #FFF;
+}
+
+.follow-btn{
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding: 5px 18px;
+
+  &.followed{
+    border: 1px solid rgb(207, 217, 222);
+    background-color: #FFF;
+  }
+}
+
+.user-item{
+  display: flex;
+  padding: 12px 16px;
+  cursor: pointer;
+  align-items: flex-start;
+
+  &-sig{
+    flex: 1 1 auto;
+    padding: 0 12px;
+  }
+
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.menu-item{
+  & .user-item{
+    padding: 0px;
+    &:hover{
+      background-color: unset;
+    }
+  }
+}
+
+.at{
+  color:rgb(83, 100, 113);
+  word-break: break-word;
+}
+
+.name{
+  font-weight: 700;
+  color: rgb(15, 20, 25);
+  word-break: break-word;
+
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+.about{
+  word-break: break-word;
+} 

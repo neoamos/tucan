@@ -1,0 +1,34 @@
+
+
+.post-card{
+  border: 1px solid rgb(207, 217, 222);
+  border-radius: 16px;
+  overflow: hidden;
+  max-height: 450px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+
+  &-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.03)
+  }
+  
+  & img, & video{
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    max-height: 450px;
+  }
+
+  & a{
+    height: 100%;
+  }
+}

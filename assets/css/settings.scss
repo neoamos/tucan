@@ -1,0 +1,39 @@
+
+
+.relay-item{
+  display: flex;
+  align-items: center;
+
+  &-url{
+    flex: 1 1 auto;
+    word-break: break-all;
+  }
+
+  &-settings{
+    display: flex;
+    flex: 0 0 100px;
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  &-status{
+    padding: 5px;
+    border-radius: 50%;
+    margin: 16px;
+    &.green{
+      background-color: rgb(2, 179, 2);
+    }
+
+    &.red{
+      background-color: #F00;
+    }
+    &.gray{
+      background-color: rgb(189, 189, 189);
+    }
+  }
+
+  &-remove{
+    color: #F00;
+    cursor: pointer;
+  }
+}
