@@ -38,6 +38,10 @@ defmodule App.Application do
         %{
           id: :connect_relays,
           start: {App.Task, :start_link, [%{job: &App.Client.ProcessingWorker.connect_relays/0, args: [], interval: 1/60, name: "connect_relays" }]}
+        },
+        %{
+          id: :delete_replaceable_events,
+          start: {App.Task, :start_link, [%{job: &App.Client.ProcessingWorker.delete_replaceable_events/0, args: [], interval: 1/(60*60), name: "delete_replaceable_events" }]}
         }
       ]
     else

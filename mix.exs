@@ -52,7 +52,7 @@ defmodule App.MixProject do
       # {:secp256k1, git: "https://git.sr.ht/~sgiath/secp256k1"},
       {:websockex, "~> 0.4.3"},
       {:timex, "~> 3.7"},
-      {:nostr_tools, path: "../../nostr_tools"},
+      {:nostr_tools, path: "../nostr_tools"},
       {:earmark, "~> 1.4"},
       {:html_sanitize_ex, "~> 1.4"},
       {:floki, "~> 0.34.0"},

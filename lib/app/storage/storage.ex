@@ -107,7 +107,7 @@ defmodule App.Storage do
       order_by: [desc: e.created_at],
       limit: 1,
       preload: [:tags]
-    es = Repo.one(query)
+    es = Repo.one(query, timeout: :infinity)
     if es do
       e = event_from_storage(es)
       {e, es}
@@ -129,6 +129,12 @@ defmodule App.Storage do
       where: es.processing_status != ^status,
       update: [set: [processing_status: ^status]]
 
+    Repo.update_all(query, [])
+  end
+
+  def set_deleted_prior_events(es, val) do
+    query = from e in EventStorage, where: e.id==^es.id,
+      update: [set: [deleted_prior_events: ^val]]
     Repo.update_all(query, [])
   end
 

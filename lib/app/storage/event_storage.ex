@@ -18,6 +18,7 @@ defmodule App.Storage.EventStorage do
     field :deleted, :boolean
     field :processed_at, :utc_datetime
     field :processing_status, :string
+    field :deleted_prior_events, :boolean
     belongs_to :deleted_by, __MODULE__
     has_many :relays, EventRelay, on_replace: :delete
 

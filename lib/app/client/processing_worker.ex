@@ -34,7 +34,7 @@ defmodule App.Client.ProcessingWorker do
       query
     end
 
-    events = Repo.all(query)
+    events = Repo.all(query, timeout: :infinity, pool_timeout: :infinity)
     # stream = Task.async_stream(events, fn es ->
     #   try do
     #     process_event(es)
@@ -109,6 +109,23 @@ defmodule App.Client.ProcessingWorker do
     Enum.map(stream, fn i -> i end)
   end
 
+  def delete_replaceable_events do
+    replaceable_kinds = [0,3]
+    one_hour_ago = Timex.shift(Timex.now(), hours: -1)
+    query = from es in EventStorage,
+      where: es.deleted_prior_events==false or is_nil(es.deleted_prior_events),
+      where: es.kind in ^replaceable_kinds or (es.kind >=10000 and es.kind <= 19999),
+      where: es.inserted_at < ^one_hour_ago,
+      limit: 1000,
+      order_by: [desc: es.created_at]
+    ess = Repo.all(query)
+
+    Enum.map(ess, fn es ->
+      Storage.delete_old_events(es.kind, es.pubkey, es.created_at)
+      Storage.set_deleted_prior_events(es, true)
+    end)
+  end
+
   def delete_old_events kind, limit \\ 1000 do
     if kind == 3 or kind == 0 do
       query = from es in EventStorage,
@@ -117,11 +134,27 @@ defmodule App.Client.ProcessingWorker do
         having: count("*") > 3,
         limit: ^limit,
         select: es.pubkey
-      pubkeys = Repo.all(query)
+      pubkeys = Repo.all(query, timeout: :infinity)
       Enum.map(pubkeys, fn pubkey ->
         {latest_event, _} = Storage.get_latest_event(kind, pubkey)
         Storage.delete_old_events(kind, latest_event.pubkey, latest_event.created_at)
       end)
+    end
+  end
+
+  def delete_all_old_events kind do
+    if kind == 3 or kind == 0 do
+      query = from es in EventStorage,
+        where: es.kind==^kind,
+        group_by: [es.pubkey],
+        select: es.pubkey
+      pubkeys = Repo.stream(query, timeout: :infinity)
+      Repo.transaction(fn ->
+        Enum.map(pubkeys, fn pubkey ->
+          {latest_event, _} = Storage.get_latest_event(kind, pubkey)
+          Storage.delete_old_events(kind, latest_event.pubkey, latest_event.created_at)
+        end)
+      end, timeout: :infinity, pool_timeout: :infinity)
     end
   end
 
@@ -136,11 +169,13 @@ defmodule App.Client.ProcessingWorker do
     |> Enum.filter(fn url -> String.match?(url, ~r(^wss://.+)) end)
     Enum.map(urls, fn url ->
       if !WebSocketClient.connected?(url) do
-        WebSocketClient.connect(url)
-        |> case do
-          {:ok, _} -> IO.puts("Connected to #{url}")
-          other -> IO.puts("failed to connect to #{url}: #{inspect other}")
-        end
+        Task.async(fn ->
+          WebSocketClient.connect(url)
+          |> case do
+            {:ok, _} -> IO.puts("Connected to #{url}")
+            other -> IO.puts("failed to connect to #{url}: #{inspect other}")
+          end
+        end)
       end
     end)
   end
